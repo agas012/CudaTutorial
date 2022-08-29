@@ -8,7 +8,7 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
-#define N 10
+#define N 100000000
 
 extern "C" cudaError_t addWithCuda(std::vector<float>&a, std::vector<float>&b, std::vector<float>&c, unsigned int size);
 
@@ -56,4 +56,4 @@ int main() {
         fprintf(stderr, "cudaDeviceReset failed!");
         return 1;
     }
-}
+ }

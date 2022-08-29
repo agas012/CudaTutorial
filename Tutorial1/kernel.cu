@@ -3,9 +3,11 @@
 #include <stdio.h>
 #include <vector>
 
+#define THREADS_PER_BLOCK 1024
+
 __global__ void addKernel(float *c, float *a, float *b)
 {
-    int i = threadIdx.x;
+    int i = threadIdx.x + blockIdx.x * blockDim.x;
     c[i] = a[i] + b[i];
 }
 
@@ -79,8 +81,8 @@ extern "C" cudaError_t addWithCuda(std::vector<float>& a, std::vector<float>& b,
     }
 
     // Launch a kernel on the GPU with one thread for each element.
-    addKernel <<<1, 10>>>(dev_c, dev_a, dev_b);
-
+    addKernel <<<ceil(size/THREADS_PER_BLOCK), THREADS_PER_BLOCK>>>(dev_c, dev_a, dev_b);
+    
     // Check for any errors launching the kernel
     cudaStatus = cudaGetLastError();
     if (cudaStatus != cudaSuccess) {
